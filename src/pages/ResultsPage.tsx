@@ -98,6 +98,9 @@ export default function ResultsPage() {
               <span className={styles.raceCardContent}>
                 <strong>{race.name}</strong>
                 <small>{formatRaceDate(race.date)} · {race.location}</small>
+                <span className={`${styles.badge} ${race.results.length === 0 ? styles.badgeEmpty : ''}`}>
+                  {race.results.length > 0 ? `${race.results.length} resultados` : 'Sin resultados'}
+                </span>
               </span>
             </button>
           ))}

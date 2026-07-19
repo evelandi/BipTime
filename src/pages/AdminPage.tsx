@@ -212,11 +212,12 @@ export default function AdminPage() {
               onChange={e => { setEvtName(e.target.value); setIsDirty(true); }}
             />
             <input
-              type="text"
-              placeholder="Fecha (ej: May 12, 2026) *"
+              type="date"
               value={evtDate}
               onChange={e => { setEvtDate(e.target.value); setIsDirty(true); }}
+              style={{ colorScheme: 'dark' }}
             />
+            <p className={styles.helperText}>Fecha del evento (requerida)</p>
             <input
               type="text"
               placeholder="Ubicación (ej: Parque Arví, Medellín)"

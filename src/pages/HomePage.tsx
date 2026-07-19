@@ -7,6 +7,12 @@ import { useState } from 'react';
 import { loadHomeEvents } from '../shared/utils/eventsStore';
 import styles from './HomePage.module.css';
 
+function formatEventDate(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00`);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 export default function HomePage() {
   const events = loadHomeEvents();
   const [selectedId, setSelectedId] = useState(events[0]?.id ?? '');
@@ -55,7 +61,7 @@ export default function HomePage() {
             {event!.coverImage && <div className={styles.eventBannerOverlay} />}
             <div className={styles.eventBannerContent}>
             <p className={styles.eventLabel}>Próximo Evento</p>
-            <h2 className={styles.eventDate}>{event!.date}</h2>
+            <h2 className={styles.eventDate}>{formatEventDate(event!.date)}</h2>
             <div className={styles.eventMeta}>
               <div>
                 <span>Ubicación</span>

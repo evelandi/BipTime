@@ -27,6 +27,7 @@ export default function AdminPage() {
   const [evtModalities, setEvtModalities] = useState('');
   const [evtCoverImage, setEvtCoverImage] = useState('');
   const [evtScheduleRaw, setEvtScheduleRaw] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
 
   const isCreatingNewEvent = selectedHomeEventId === null;
   const selectedHomeEvent = homeEvents.find(e => e.id === selectedHomeEventId) ?? null;
@@ -41,6 +42,7 @@ export default function AdminPage() {
   const clearEvtForm = () => {
     setEvtName(''); setEvtDate(''); setEvtLocation('');
     setEvtHours(''); setEvtModalities(''); setEvtCoverImage(''); setEvtScheduleRaw('');
+    setIsDirty(false);
   };
 
   const parseSchedule = (raw: string): HomeScheduleItem[] =>
@@ -77,6 +79,7 @@ export default function AdminPage() {
       coverImage: saved.coverImage ?? existingRace?.coverImage ?? '/images/results-running.jpg',
       results: existingRace?.results ?? [],
     });
+    setIsDirty(false);
   };
 
   const handleDeleteHomeEvent = () => {
@@ -162,7 +165,10 @@ export default function AdminPage() {
             <button
               type="button"
               className={styles.newButton}
-              onClick={() => setSelectedHomeEventId(null)}
+              onClick={() => {
+                if (isDirty && !window.confirm('Tienes cambios sin guardar. ¿Descartar y crear un evento nuevo?')) return;
+                setSelectedHomeEventId(null);
+              }}
             >
               + Nuevo
             </button>
@@ -175,7 +181,10 @@ export default function AdminPage() {
                 <li
                   key={e.id}
                   className={`${styles.eventListItem} ${selectedHomeEventId === e.id ? styles.eventListItemActive : ''}`}
-                  onClick={() => setSelectedHomeEventId(e.id)}
+                  onClick={() => {
+                    if (isDirty && !window.confirm('Tienes cambios sin guardar. ¿Descartar y cambiar de evento?')) return;
+                    setSelectedHomeEventId(e.id);
+                  }}
                 >
                   <strong>{e.name}</strong>
                   <span>{e.date}</span>
@@ -200,31 +209,31 @@ export default function AdminPage() {
               type="text"
               placeholder="Nombre del evento *"
               value={evtName}
-              onChange={e => setEvtName(e.target.value)}
+              onChange={e => { setEvtName(e.target.value); setIsDirty(true); }}
             />
             <input
               type="text"
               placeholder="Fecha (ej: May 12, 2026) *"
               value={evtDate}
-              onChange={e => setEvtDate(e.target.value)}
+              onChange={e => { setEvtDate(e.target.value); setIsDirty(true); }}
             />
             <input
               type="text"
               placeholder="Ubicación (ej: Parque Arví, Medellín)"
               value={evtLocation}
-              onChange={e => setEvtLocation(e.target.value)}
+              onChange={e => { setEvtLocation(e.target.value); setIsDirty(true); }}
             />
             <input
               type="text"
               placeholder="Horario (ej: 7AM - 2PM)"
               value={evtHours}
-              onChange={e => setEvtHours(e.target.value)}
+              onChange={e => { setEvtHours(e.target.value); setIsDirty(true); }}
             />
             <input
               type="text"
               placeholder="Modalidades (ej: 5K / 10K / Trail)"
               value={evtModalities}
-              onChange={e => setEvtModalities(e.target.value)}
+              onChange={e => { setEvtModalities(e.target.value); setIsDirty(true); }}
             />
             <label className={styles.fieldLabel}>Imagen de fondo</label>
             <input
@@ -241,7 +250,7 @@ export default function AdminPage() {
                   return;
                 }
                 const reader = new FileReader();
-                reader.onload = ev => setEvtCoverImage(ev.target?.result as string);
+                reader.onload = ev => { setEvtCoverImage(ev.target?.result as string); setIsDirty(true); };
                 reader.readAsDataURL(file);
               }}
             />
@@ -264,7 +273,7 @@ export default function AdminPage() {
               rows={6}
               placeholder={'6:30 AM | Apertura: Recogida de dorsales.\n7:00 AM | Largada: Inicio oficial.'}
               value={evtScheduleRaw}
-              onChange={e => setEvtScheduleRaw(e.target.value)}
+              onChange={e => { setEvtScheduleRaw(e.target.value); setIsDirty(true); }}
             />
             <p className={styles.helperText}>Formato: <code>HH:MM AM | Título: Descripción</code></p>
             <button type="submit">

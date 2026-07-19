@@ -66,5 +66,7 @@ export function deleteHomeEvent(id: string): HomeEvent[] {
 }
 
 export function slugifyEvent(name: string, date: string): string {
-  return `${name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-')}-${date.replace(/\s+/g, '-').toLowerCase()}`;
+  const namePart = name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const datePart = date.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return `${namePart}-${datePart}`;
 }

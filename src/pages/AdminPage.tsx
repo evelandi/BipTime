@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ExcelImporter, ErrorDisplay } from '../features/results';
+import { Toast } from '../shared/components';
 import type { ExcelValidationError, HomeEvent, HomeScheduleItem, RaceResult } from '../shared/types';
 import { deleteRace, ensureRaceExists, loadRawRaces, updateRaceResults, upsertRace } from '../shared/utils/raceResultsStore';
 import { deleteHomeEvent, loadRawHomeEvents, slugifyEvent, upsertHomeEvent } from '../shared/utils/eventsStore';
@@ -28,6 +29,7 @@ export default function AdminPage() {
   const [evtCoverImage, setEvtCoverImage] = useState('');
   const [evtScheduleRaw, setEvtScheduleRaw] = useState('');
   const [isDirty, setIsDirty] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const isCreatingNewEvent = selectedHomeEventId === null;
   const selectedHomeEvent = homeEvents.find(e => e.id === selectedHomeEventId) ?? null;
@@ -80,6 +82,7 @@ export default function AdminPage() {
       results: existingRace?.results ?? [],
     });
     setIsDirty(false);
+    setToast({ message: 'Evento guardado correctamente', type: 'success' });
   };
 
   const handleDeleteHomeEvent = () => {
@@ -91,6 +94,7 @@ export default function AdminPage() {
     setSelectedHomeEventId(updated[0]?.id ?? null);
     setErrors([]);
     setEventResults([]);
+    setToast({ message: 'Evento eliminado', type: 'success' });
   };
 
   const handleDataLoaded = (newData: RaceResult[]) => {
@@ -98,6 +102,7 @@ export default function AdminPage() {
     updateRaceResults(selectedHomeEventId, newData);
     setEventResults(newData);
     setErrors([]);
+    setToast({ message: `${newData.length} resultados importados`, type: 'success' });
   };
 
   useEffect(() => {
@@ -297,6 +302,13 @@ export default function AdminPage() {
           )}
         </article>
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </section>
   );
 }

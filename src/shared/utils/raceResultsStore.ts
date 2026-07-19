@@ -1505,3 +1505,23 @@ export const updateRaceResults = (raceId: string, results: RaceResult[]) => {
   saveRaces(races);
   return races;
 };
+
+/**
+ * Garantiza que exista un RaceEvent para el HomeEvent dado.
+ * Si no existe, lo crea con resultados vacíos.
+ * Si ya existe, NO lo modifica (preserva resultados).
+ */
+export const ensureRaceExists = (event: { id: string; name: string; date: string; location: string; coverImage?: string }): void => {
+  const races = loadRawRaces();
+  const exists = races.some(r => r.id === event.id);
+  if (!exists) {
+    upsertRace({
+      id: event.id,
+      name: event.name,
+      date: event.date,
+      location: event.location,
+      coverImage: event.coverImage ?? '/images/results-running.jpg',
+      results: [],
+    });
+  }
+};

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { ExcelImporter, ErrorDisplay } from '../features/results';
 import type { ExcelValidationError, HomeEvent, HomeScheduleItem, RaceResult } from '../shared/types';
-import { deleteRace, loadRawRaces, updateRaceResults, upsertRace } from '../shared/utils/raceResultsStore';
+import { deleteRace, ensureRaceExists, loadRawRaces, updateRaceResults, upsertRace } from '../shared/utils/raceResultsStore';
 import { deleteHomeEvent, loadRawHomeEvents, slugifyEvent, upsertHomeEvent } from '../shared/utils/eventsStore';
 import styles from './AdminPage.module.css';
 
@@ -32,6 +32,11 @@ export default function AdminPage() {
   const selectedHomeEvent = homeEvents.find(e => e.id === selectedHomeEventId) ?? null;
 
   const evtFormTitle = isCreatingNewEvent ? 'Nuevo evento' : `Editando: ${selectedHomeEvent?.name}`;
+
+  // Sync: garantizar que cada homeEvent tenga su raceEvent
+  useEffect(() => {
+    loadRawHomeEvents().forEach(ensureRaceExists);
+  }, []);
 
   const clearEvtForm = () => {
     setEvtName(''); setEvtDate(''); setEvtLocation('');

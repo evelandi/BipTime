@@ -2,12 +2,11 @@
  * Results Page - Página de resultados públicos de carreras
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ResultsFilters, ResultsTable } from '../features/results';
 import { CertificateModal } from '../features/certificate';
-import type { RaceResult, ResultsFilters as FiltersType } from '../shared/types';
-import { loadRaces, loadRawRaces } from '../shared/utils/raceResultsStore';
-import { loadRawHomeEvents } from '../shared/utils/eventsStore';
+import type { RaceResult, ResultsFilters as FiltersType, Race } from '../shared/types';
+import { loadRaces } from '../shared/utils/racesStore';
 import styles from './ResultsPage.module.css';
 
 const DEFAULT_FILTERS: FiltersType = {
@@ -26,33 +25,21 @@ const formatRaceDate = (dateValue: string) => {
 };
 
 export default function ResultsPage() {
-  const [races] = useState(() => {
-    const homeEvents = loadRawHomeEvents();
-    const rawRaces = loadRawRaces();
-
-    if (homeEvents.length > 0) {
-      // Only show races that have a matching HomeEvent (source of truth)
-      const validIds = new Set(homeEvents.map(e => e.id));
-      const filtered = rawRaces.filter(r => validIds.has(r.id));
-      if (filtered.length > 0) return filtered;
-    }
-
-    // Fallback: raw races or demo
-    return rawRaces.length > 0 ? rawRaces : loadRaces();
-  });
-  const [selectedRaceId, setSelectedRaceId] = useState(() => {
-    const homeEvents = loadRawHomeEvents();
-    const rawRaces = loadRawRaces();
-    if (homeEvents.length > 0) {
-      const validIds = new Set(homeEvents.map(e => e.id));
-      const filtered = rawRaces.filter(r => validIds.has(r.id));
-      if (filtered.length > 0) return filtered[0].id;
-    }
-    const list = rawRaces.length > 0 ? rawRaces : loadRaces();
-    return list[0]?.id || '';
-  });
+  const [races, setRaces] = useState<Race[]>([]);
+  const [selectedRaceId, setSelectedRaceId] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState<FiltersType>(DEFAULT_FILTERS);
   const [selectedRunner, setSelectedRunner] = useState<RaceResult | null>(null);
+
+  useEffect(() => {
+    loadRaces()
+      .then(data => {
+        setRaces(data);
+        setSelectedRaceId(data[0]?.id ?? '');
+      })
+      .catch(err => console.error('Error loading races:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const selectedRace = useMemo(
     () => races.find((race) => race.id === selectedRaceId) || null,
@@ -63,6 +50,17 @@ export default function ResultsPage() {
     setSelectedRaceId(raceId);
     setFilters(DEFAULT_FILTERS);
   };
+
+  if (isLoading) {
+    return (
+      <div className={styles.page}>
+        <header className={styles.header}>
+          <p className={styles.kicker}>Resultados Oficiales</p>
+          <h1>Cargando resultados…</h1>
+        </header>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -98,6 +96,9 @@ export default function ResultsPage() {
               <span className={styles.raceCardContent}>
                 <strong>{race.name}</strong>
                 <small>{formatRaceDate(race.date)} · {race.location}</small>
+                <span className={`${styles.badge} ${race.results.length === 0 ? styles.badgeEmpty : ''}`}>
+                  {race.results.length > 0 ? `${race.results.length} resultados` : 'Sin resultados'}
+                </span>
               </span>
             </button>
           ))}

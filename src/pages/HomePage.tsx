@@ -3,14 +3,49 @@
  * Moderno, dinámico y orientado al deporte
  */
 
-import { useState } from 'react';
-import { loadHomeEvents } from '../shared/utils/eventsStore';
+import { useEffect, useState } from 'react';
+import { loadRaces } from '../shared/utils/racesStore';
+import type { Race } from '../shared/types';
 import styles from './HomePage.module.css';
 
+function formatEventDate(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00`);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 export default function HomePage() {
-  const events = loadHomeEvents();
-  const [selectedId, setSelectedId] = useState(events[0]?.id ?? '');
-  const event = events.find(e => e.id === selectedId) ?? events[0];
+  const [races, setRaces] = useState<Race[]>([]);
+  const [selectedId, setSelectedId] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadRaces()
+      .then(data => {
+        setRaces(data);
+        setSelectedId(data[0]?.id ?? '');
+      })
+      .catch(err => console.error('Error loading races:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const event = races.find(e => e.id === selectedId) ?? races[0];
+
+  if (isLoading) {
+    return (
+      <div className={styles.home}>
+        <section className={styles.hero}>
+          <div className={styles.heroOverlay}></div>
+          <div className={styles.heroContent}>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.heroTitleLine}>Cronometramos Tu Pasión</span>
+              <span className={`${styles.heroTitleLine} ${styles.heroTitleLineAlt}`}>Vestimos Tu Evento</span>
+            </h1>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.home}>
@@ -33,7 +68,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {events.length > 0 && (
+      {races.length > 0 && (
         <>
           <div className={styles.eventSelector}>
             <label className={styles.eventSelectorLabel}>Selecciona un evento</label>
@@ -42,7 +77,7 @@ export default function HomePage() {
               value={selectedId}
               onChange={e => setSelectedId(e.target.value)}
             >
-              {events.map(e => (
+              {races.map(e => (
                 <option key={e.id} value={e.id}>{e.name}</option>
               ))}
             </select>
@@ -55,7 +90,7 @@ export default function HomePage() {
             {event!.coverImage && <div className={styles.eventBannerOverlay} />}
             <div className={styles.eventBannerContent}>
             <p className={styles.eventLabel}>Próximo Evento</p>
-            <h2 className={styles.eventDate}>{event!.date}</h2>
+            <h2 className={styles.eventDate}>{formatEventDate(event!.date)}</h2>
             <div className={styles.eventMeta}>
               <div>
                 <span>Ubicación</span>

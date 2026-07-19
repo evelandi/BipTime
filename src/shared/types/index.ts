@@ -98,3 +98,5 @@ export interface RaceEvent {
   coverImage?: string;
   results: RaceResult[];
 }
+
+export type { Race } from './race';

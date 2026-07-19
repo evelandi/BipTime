@@ -6,7 +6,7 @@ import { deleteRace, ensureRaceExists, loadRawRaces, updateRaceResults, upsertRa
 import { deleteHomeEvent, loadRawHomeEvents, slugifyEvent, upsertHomeEvent } from '../shared/utils/eventsStore';
 import styles from './AdminPage.module.css';
 
-const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || 'biptime123';
+const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN ?? '';
 
 export default function AdminPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);

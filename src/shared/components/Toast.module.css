@@ -11,6 +11,7 @@
   font-weight: 500;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   z-index: 9999;
+  min-width: 200px;
   animation: slideIn 0.2s ease-out;
 }
 

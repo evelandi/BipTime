@@ -8,7 +8,7 @@ interface ToastProps {
 
 export function Toast({ message, type = 'success', onClose }: ToastProps) {
   return (
-    <div className={`${styles.toast} ${styles[type]}`} role="status" aria-live="polite">
+    <div className={`${styles.toast} ${styles[type]}`} role="status">
       <span>{message}</span>
       <button className={styles.close} onClick={onClose} aria-label="Cerrar">×</button>
     </div>

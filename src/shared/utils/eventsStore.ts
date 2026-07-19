@@ -16,7 +16,7 @@ const DEFAULT_EVENTS: HomeEvent[] = [
     { time: "7:00", title: "Calentamiento", desc: "" },
     { time: "7:30", title: "Largada 14K", desc: "" },
     { time: "7:45", title: "Largada 7K", desc: "" },
-    { time: "11:00", title: "Premiaci�n", desc: "" },
+    { time: "11:00", title: "Premiación", desc: "" },
     { time: "12:00", title: "Cierre del Evento", desc: "" },
     ],
   },

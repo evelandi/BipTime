@@ -1,0 +1,181 @@
+/**
+ * ResultsPage Styles Module
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.header {
+  position: relative;
+  background-image:
+    linear-gradient(125deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.68)),
+    url('/images/results-running.jpg');
+  background-size: cover;
+  background-position: center;
+  color: var(--color-text-light);
+  border-radius: 14px;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 999px;
+  background: rgba(255, 215, 0, 0.12);
+  top: -220px;
+  right: -120px;
+}
+
+.kicker {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.header h1 {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--color-text-light);
+  font-size: clamp(34px, 6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -1.4px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.header p {
+  margin: 0;
+  color: var(--color-gray-light);
+  max-width: 650px;
+  position: relative;
+  z-index: 1;
+}
+
+.headerMeta {
+  margin-top: var(--spacing-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  position: relative;
+  z-index: 1;
+}
+
+.headerMeta span {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: var(--color-text-light);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.raceSelector {
+  border: 1px solid var(--color-gray-light);
+  border-radius: 12px;
+  background: var(--color-bg);
+  padding: var(--spacing-md);
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.selectorTitle {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.raceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+.raceCard {
+  position: relative;
+  min-height: 156px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-gray-light);
+  background-size: cover;
+  background-position: center;
+  text-align: left;
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+}
+
+.raceCardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 20%, rgba(0, 0, 0, 0.84) 100%);
+}
+
+.raceCardContent {
+  position: relative;
+  z-index: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: grid;
+  gap: 4px;
+}
+
+.raceCardContent strong {
+  color: var(--color-text-light);
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.raceCardContent small {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.raceCardActive {
+  outline: 3px solid var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.emptyState {
+  border: 1px solid var(--color-gray-light);
+  border-radius: 12px;
+  background: var(--color-bg);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.emptyState p {
+  margin: 0;
+  color: var(--color-gray-medium);
+}
+
+@media (max-width: 768px) {
+  .header {
+    border-radius: 10px;
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .raceSelector {
+    padding: var(--spacing-sm);
+  }
+
+  .raceGrid {
+    grid-template-columns: 1fr;
+  }
+}

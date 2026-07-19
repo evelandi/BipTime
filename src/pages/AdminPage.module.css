@@ -1,0 +1,351 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.header {
+  background-image:
+    linear-gradient(125deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.68)),
+    url('/images/results-running.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  color: var(--color-text-light);
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+
+.kicker {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--color-accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: clamp(34px, 6vw, 68px);
+  line-height: 0.95;
+  letter-spacing: -1.4px;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.header p {
+  margin: 0;
+  max-width: 680px;
+  color: var(--color-gray-light);
+}
+
+.unlockCard,
+.card,
+.uploadCard {
+  border: 1px solid var(--color-gray-light);
+  border-radius: 12px;
+  background: var(--color-bg);
+  padding: var(--spacing-md);
+}
+
+.unlockCard {
+  max-width: 480px;
+}
+
+.unlockCard label,
+.card label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 800;
+}
+
+.unlockCard input,
+.card input,
+.card select {
+  width: 100%;
+}
+
+.unlockCard button,
+.createForm button {
+  margin-top: var(--spacing-sm);
+  min-height: 40px;
+  width: 100%;
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  transition: all 180ms ease;
+}
+
+.unlockCard button:hover,
+.createForm button:hover {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+.actionsRow {
+  margin-top: var(--spacing-sm);
+}
+
+.deleteButton {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 2px solid #9f1d1d;
+  border-radius: 999px;
+  color: #9f1d1d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+
+.deleteButton:hover {
+  background: #9f1d1d;
+  color: var(--color-text-light);
+}
+
+/* ── Eventos Home UI ── */
+
+.sectionDivider {
+  margin: var(--spacing-xxl) 0 var(--spacing-lg);
+  padding-top: var(--spacing-xl);
+  border-top: 2px solid var(--color-gray-light);
+}
+
+.sectionDivider h2 {
+  margin: 4px 0 6px;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.sectionDivider p {
+  margin: 0;
+  color: var(--color-gray-medium);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.newButton {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: opacity 180ms ease;
+  white-space: nowrap;
+}
+
+.newButton:hover {
+  opacity: 0.8;
+}
+
+.eventList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eventListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-gray-light);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.eventListItem:hover {
+  border-color: var(--color-primary);
+  background: rgba(0,0,0,0.03);
+}
+
+.eventListItem strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.eventListItem span {
+  font-size: 12px;
+  color: var(--color-gray-medium);
+}
+
+.eventListItemActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.eventListItemActive strong,
+.eventListItemActive span {
+  color: var(--color-text-light);
+}
+
+.fieldLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-gray-medium);
+}
+
+.fieldLabel span {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.pinError {
+  margin-top: var(--spacing-sm);
+  margin-bottom: 0;
+  color: #8b0000;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.card h2,
+.uploadCard h2 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 24px;
+}
+
+.raceMeta {
+  margin-top: var(--spacing-sm);
+  display: grid;
+  gap: 4px;
+}
+
+.raceMeta p {
+  margin: 0;
+  color: var(--color-gray-medium);
+  font-size: 14px;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--color-gray-medium);
+}
+
+.raceMeta span {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.createForm {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+
+.imagePreview {
+  border: 1px solid var(--color-gray-light);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-gray-lighter);
+}
+
+.imagePreview img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.removeImageBtn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: #9f1d1d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.removeImageBtn:hover {
+  background: rgba(159, 29, 29, 0.06);
+}
+
+.fileInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-gray-light);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.helperText {
+  margin: 0;
+  color: var(--color-gray-medium);
+  font-size: 13px;
+}
+
+.uploadCard p {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--color-gray-medium);
+}
+
+.formDivider {
+  border: none;
+  border-top: 1px solid var(--color-gray-light);
+  margin: var(--spacing-md) 0;
+}
+
+.uploaderTitle {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.uploaderHint {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--color-gray-medium);
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

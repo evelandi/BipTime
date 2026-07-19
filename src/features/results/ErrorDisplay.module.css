@@ -1,0 +1,68 @@
+/**
+ * ErrorDisplay Styles Module
+ */
+
+.errorContainer {
+  background-color: #ffe6e6;
+  border-left: 4px solid #8b0000;
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.title {
+  color: #8b0000;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-lg);
+}
+
+.errorList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.errorItem {
+  background-color: var(--color-bg);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid #8b0000;
+}
+
+.errorItem strong {
+  color: #8b0000;
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorItem p {
+  color: var(--color-gray-medium);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorItem p:last-child {
+  margin-bottom: 0;
+}
+
+.value {
+  background-color: var(--color-gray-lighter);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+}
+
+.value code {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .errorContainer {
+    padding: var(--spacing-md);
+  }
+
+  .errorItem {
+    padding: var(--spacing-md);
+  }
+}

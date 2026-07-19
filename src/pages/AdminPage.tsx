@@ -234,6 +234,12 @@ export default function AdminPage() {
               onChange={e => {
                 const file = e.target.files?.[0];
                 if (!file) return;
+                const MAX_SIZE_BYTES = 600 * 1024; // 600 KB
+                if (file.size > MAX_SIZE_BYTES) {
+                  alert(`La imagen es muy grande (${(file.size / 1024).toFixed(0)} KB). El límite es 600 KB. Usa una imagen más pequeña o comprimida.`);
+                  e.target.value = '';
+                  return;
+                }
                 const reader = new FileReader();
                 reader.onload = ev => setEvtCoverImage(ev.target?.result as string);
                 reader.readAsDataURL(file);

@@ -89,7 +89,7 @@ export const ExcelImporter: FC<ExcelImporterProps> = ({ onDataLoaded, onError })
         const arrayBuffer = e.target?.result as ArrayBuffer;
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rawData = XLSX.utils.sheet_to_json(firstSheet);
+        const rawData = XLSX.utils.sheet_to_json(firstSheet, { raw: false });
 
         const result = parseRaceResults(rawData);
 

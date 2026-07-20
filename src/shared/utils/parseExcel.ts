@@ -13,6 +13,20 @@ const REQUIRED_COLUMNS = [
   'Status',
 ] as const;
 
+// Excel stores times as fractions of a day (e.g. 2h6m47s = 0.08804...).
+// This converts that serial to HH:MM:SS, or returns the value as-is if already a string.
+function normalizeTimeValue(val: unknown): string {
+  if (val == null) return '';
+  if (typeof val === 'number' && val >= 0 && val < 1) {
+    const total = Math.round(val * 86400);
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+  return String(val).trim();
+}
+
 /**
  * Convierte string de tiempo (HH:MM:SS) a segundos
  */
@@ -96,8 +110,8 @@ export function parseRaceResults(rawData: any[]): ExcelValidationResult {
       const ageGroupRankRaw = row['Age Group Rank(Chip Time)'] ?? row['Age Group Rank']; // col V
       const genderRankRaw = row['Gender Rank (Chip Time)'] ?? row['Gender Rank'];      // col Q
 
-      const gunTime = gunTimeRaw != null ? String(gunTimeRaw).trim() : '';
-      const netTime = netTimeRaw != null ? String(netTimeRaw).trim() : '';
+      const gunTime = normalizeTimeValue(gunTimeRaw);
+      const netTime = normalizeTimeValue(netTimeRaw);
       const posicionGeneral = overallRankRaw != null ? parseInt(String(overallRankRaw), 10) : 0;
       const posicionCategoria = ageGroupRankRaw != null ? parseInt(String(ageGroupRankRaw), 10) : 0;
       const posicionGenero = genderRankRaw != null && genderRankRaw !== ''

@@ -96,8 +96,8 @@ export const CertificateModal = ({ runner, coverImage, onClose }: CertificateMod
                 <strong>{runner.netTime || '—'}</strong>
               </div>
               <div>
-                <span>Posición General</span>
-                <strong>{runner.posicionGeneral}</strong>
+                <span>Pos. General / Categoría</span>
+                <strong>{runner.posicionGeneral}° / {runner.posicionCategoria}°</strong>
               </div>
               <div>
                 <span>Categoría</span>

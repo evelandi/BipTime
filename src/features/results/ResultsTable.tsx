@@ -97,9 +97,11 @@ export const ResultsTable: FC<ResultsTableProps> = ({
               <th>Género</th>
               <th>Categoría</th>
               <th>Estado</th>
-              <th>Tiempo de Carrera</th>
-              <th>Pos. Categoría</th>
+              <th>Tiempo Oficial</th>
+              <th>Tiempo Neto</th>
               <th>Pos. General</th>
+              <th>Pos. Género</th>
+              <th>Pos. Categoría</th>
             </tr>
           </thead>
           <tbody>
@@ -128,9 +130,11 @@ export const ResultsTable: FC<ResultsTableProps> = ({
                     {result.status}
                   </span>
                 </td>
+                <td className={`${styles.time} ${styles.gunTime}`}>{result.gunTime || '—'}</td>
                 <td className={`${styles.time} ${styles.netTime}`}>{result.netTime || '—'}</td>
-                <td className={styles.rank}>{result.posicionGenero ?? '—'}</td>
                 <td className={styles.rank}>{result.posicionGeneral || '—'}</td>
+                <td className={styles.rank}>{result.posicionGenero ?? '—'}</td>
+                <td className={styles.rank}>{result.posicionCategoria || '—'}</td>
               </tr>
             ))}
           </tbody>

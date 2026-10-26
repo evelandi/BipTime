@@ -135,7 +135,7 @@ export const ExcelImporter: FC<ExcelImporterProps> = ({ onDataLoaded, onError })
         className={styles.input}
         aria-label="Upload Excel results file"
       />
-      <p className={styles.hint}>Columnas requeridas: Item, Bib, Name, Gender, Status — y para finishers: Gun Time, Net Time, Overall Rank, Age Group Rank</p>
+      <p className={styles.hint}>Carga directa del Excel que descargas de Feibot, sin modificarlo. Columnas requeridas: Item, Bib, Name, Gender. Si Status viene vacío se deduce de los tiempos.</p>
       {successCount !== null && (
         <p className={styles.successMsg}>✅ {successCount} corredores cargados exitosamente</p>
       )}

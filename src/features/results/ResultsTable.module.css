@@ -28,17 +28,17 @@
 }
 
 .table th {
-  padding: 12px 14px;
+  padding: 12px 10px;
   text-align: left;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .table td {
-  padding: 12px 14px;
+  padding: 12px 10px;
   border-top: 1px solid var(--color-gray-light);
 }
 
@@ -57,6 +57,7 @@
 
 .name {
   font-weight: 700;
+  min-width: 170px;
 }
 
 .time {
@@ -67,6 +68,12 @@
 
 .netTime {
   font-weight: 800;
+}
+
+/* El tiempo oficial acompaña al neto; se deja en peso normal para que
+   el neto siga siendo el que salta a la vista. */
+.gunTime {
+  font-weight: 600;
 }
 
 .status {
@@ -159,6 +166,7 @@
 .rank {
   font-weight: 800;
   text-align: center;
+  width: 1%;
 }
 
 .empty {

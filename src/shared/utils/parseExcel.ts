@@ -4,13 +4,14 @@
 
 import type { RaceResult, ExcelValidationResult, ExcelValidationError } from '../types';
 
-// Columnas mínimas requeridas (presentes en todos los registros del archivo de chip)
+// Columnas mínimas requeridas (presentes en todos los registros del archivo de chip).
+// Status no entra aquí: Feibot la deja vacía mientras el corredor sigue sin resolver,
+// así que se deduce del resto de la fila (ver inferStatus).
 const REQUIRED_COLUMNS = [
   'Item',
   'Bib',
   'Name',
   'Gender',
-  'Status',
 ] as const;
 
 // Excel stores times as fractions of a day (e.g. 2h6m47s = 0.08804...).
@@ -58,6 +59,22 @@ export function secondsToTimeString(seconds: number): string {
 }
 
 /**
+ * Deduce el Status cuando la columna viene vacía en el export de Feibot.
+ * Allá un corredor sin resolver queda en finisher = 0 y exporta la celda en blanco;
+ * antes eso rechazaba el archivo entero, ahora se resuelve con el resto de la fila.
+ *
+ *   tiene tiempo de meta              -> Finished
+ *   tiene hora de salida pero no meta -> DNF
+ *   no tiene ninguno de los dos       -> DNS
+ */
+function inferStatus(gunTime: string, netTime: string, startTime: string): string {
+  if (timeStringToSeconds(netTime) !== null || timeStringToSeconds(gunTime) !== null) {
+    return 'Finished';
+  }
+  return startTime ? 'DNF' : 'DNS';
+}
+
+/**
  * Parsea y valida datos desde un array de objetos (Excel)
  */
 export function parseRaceResults(rawData: any[]): ExcelValidationResult {
@@ -71,9 +88,15 @@ export function parseRaceResults(rawData: any[]): ExcelValidationResult {
     };
   }
 
-  // Verificar columnas requeridas
-  const firstRowKeys = Object.keys(rawData[0]);
-  const missingColumns = REQUIRED_COLUMNS.filter(col => !firstRowKeys.includes(col));
+  // Verificar columnas requeridas.
+  // Se recorre el archivo completo y no solo la primera fila: sheet_to_json omite la
+  // clave cuando la celda viene vacía, así que un primer corredor con algún dato en
+  // blanco hacía reportar como "columna faltante" un encabezado que sí existía.
+  const presentColumns = new Set<string>();
+  rawData.forEach(row => {
+    if (row) Object.keys(row).forEach(key => presentColumns.add(key));
+  });
+  const missingColumns = REQUIRED_COLUMNS.filter(col => !presentColumns.has(col));
 
   if (missingColumns.length > 0) {
     return {
@@ -101,7 +124,7 @@ export function parseRaceResults(rawData: any[]): ExcelValidationResult {
       const genero = String(row['Gender'] ?? '').trim();
       const pais = row['Country'] ? String(row['Country']).trim() : undefined;
       const categoria = row['Age Group'] ? String(row['Age Group']).trim() : '';
-      const status = String(row['Status'] ?? '').trim();
+      const statusOriginal = String(row['Status'] ?? '').trim();
 
       // Columns from chip machine (use Chip Time variants: O, Q, T, V)
       const gunTimeRaw = row['Gun Time'] ?? row['GunTime'];
@@ -109,9 +132,12 @@ export function parseRaceResults(rawData: any[]): ExcelValidationResult {
       const overallRankRaw = row['Overall Rank (Chip Time)'] ?? row['Overall Rank'];   // col T
       const ageGroupRankRaw = row['Age Group Rank(Chip Time)'] ?? row['Age Group Rank']; // col V
       const genderRankRaw = row['Gender Rank (Chip Time)'] ?? row['Gender Rank'];      // col Q
+      const startTimeRaw = row['Start Time'] ?? row['StartTime'];
 
       const gunTime = normalizeTimeValue(gunTimeRaw);
       const netTime = normalizeTimeValue(netTimeRaw);
+      const startTime = normalizeTimeValue(startTimeRaw);
+      const status = statusOriginal || inferStatus(gunTime, netTime, startTime);
       const posicionGeneral = overallRankRaw != null ? parseInt(String(overallRankRaw), 10) : 0;
       const posicionCategoria = ageGroupRankRaw != null ? parseInt(String(ageGroupRankRaw), 10) : 0;
       const posicionGenero = genderRankRaw != null && genderRankRaw !== ''
@@ -133,13 +159,16 @@ export function parseRaceResults(rawData: any[]): ExcelValidationResult {
         errors.push({ row: rowNumber, column: 'Item', value: distancia, error: 'Item (distance) cannot be empty' });
         return;
       }
-      if (!status) {
-        errors.push({ row: rowNumber, column: 'Status', value: status, error: 'Status cannot be empty' });
-        return;
-      }
-      // Only validate times/ranks for finishers
-      if (isFinisher && timeStringToSeconds(netTime) === null) {
-        errors.push({ row: rowNumber, column: 'Net Time', value: netTime, error: 'Invalid time format. Use HH:MM:SS' });
+      // Solo se validan tiempos para finishers. Basta con que uno de los dos sea
+      // válido: en Feibot un finisher puede quedar sin Net Time cuando la hora de
+      // salida se asignó a mano y el neto nunca se recalculó.
+      if (isFinisher && timeStringToSeconds(netTime) === null && timeStringToSeconds(gunTime) === null) {
+        errors.push({
+          row: rowNumber,
+          column: 'Net Time',
+          value: netTime,
+          error: 'Finisher sin Gun Time ni Net Time válidos. Use HH:MM:SS',
+        });
         return;
       }
 
